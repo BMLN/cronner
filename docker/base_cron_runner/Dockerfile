@@ -9,14 +9,12 @@ RUN apt-get -y install cron
 #add cronjobs
 RUN mkdir -p /etc/cronner/jobs
 RUN chmod -R 0644 /etc/cronner/jobs
-RUN for cronfile in $(ls /etc/cronner/jobs); do crontab /etc/cronner/jobs/$cronfile; done 
+RUN for cronfile in $(ls /etc/cronner/jobs); do crontab /etc/cron.d/$cronfile; done 
+RUN chmod -R 0644 /etc/cron.d/
 
 
-#entry
-ADD entry.sh /etc/scripts/entry.sh
-RUN chmod 715 /etc/scripts/entry.sh
-
-ENTRYPOINT ["/etc/scripts/entry.sh"]
+#entry -> run cron
+ENTRYPOINT ["cron", "-f"]
 
 
 ######################################

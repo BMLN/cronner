@@ -1,0 +1,22 @@
+FROM ubuntu:latest
+
+
+RUN apt-get update
+RUN apt-get -y install cron
+
+
+#entry
+ADD entry.sh /etc/scripts/entry.sh
+RUN chmod 715 /etc/scripts/entry.sh
+
+#data
+ADD helloworld.sh /etc/scripts/helloworld.sh
+RUN chmod 715 /etc/scripts/helloworld.sh
+
+#cronjobs
+ADD hellocron /etc/cron.d/hellocron
+RUN chmod 0644 /etc/cron.d/hellocron
+RUN crontab /etc/cron.d/hellocron
+
+
+ENTRYPOINT ["/etc/scripts/entry.sh"]
