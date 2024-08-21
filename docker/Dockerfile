@@ -6,15 +6,21 @@ RUN apt-get update
 RUN apt-get -y install cron
 
 
-#add cronjobs
+#prepare entrypoint to add cronjobs on startup
 RUN mkdir -p /etc/cronner/jobs
-RUN chmod -R 0644 /etc/cronner/jobs
-RUN for cronfile in $(ls /etc/cronner/jobs); do crontab /etc/cron.d/$cronfile; done 
-RUN chmod -R 0644 /etc/cron.d/
+
+RUN echo "#!/bin/bash \n\
+chmod -R 0644 /etc/cronner/jobs; \n\
+for cronfile in $(ls /etc/cronner/jobs); \n\
+    do crontab /etc/cron.d/$cronfile; \n\
+done \n\
+chmod -R 0644 /etc/cron.d/ \n\
+exec cron -f" > /etc/cronner/entry.sh
+RUN chmod +x /etc/cronner/entry.sh
 
 
-#entry -> run cron
-ENTRYPOINT ["cron", "-f"]
+#entry -> run entry.sh
+ENTRYPOINT ["/etc/cronner/entry.sh"]
 
 
 ######################################
