@@ -11,7 +11,7 @@ RUN mkdir -p /etc/cronner/jobs
 
 RUN echo "#!/bin/bash \n\
 chmod -R 0644 /etc/cronner/jobs \n\
-job_files=$(ls /etc/cronner/jobs) \n\
+job_files=\$(ls /etc/cronner/jobs) \n\
 for cronfile in \$job_files \n\
 do \n\
     echo added \$cronfile to crondaemon \n\
